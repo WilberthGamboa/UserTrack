@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { QrModule } from './qr/qr.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot(),TypeOrmModule.forRoot({
+  imports: [AuthModule,QrModule, ConfigModule.forRoot(),TypeOrmModule.forRoot({
     type:'postgres',
     host: process.env.DB_HOST,
     port:+process.env.DB_PORT,
@@ -15,7 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     password:process.env.DB_PASSWORD,
     autoLoadEntities:true,
     synchronize:true
-  })],
+  }), ],
   controllers: [AppController],
   providers: [AppService],
 })
