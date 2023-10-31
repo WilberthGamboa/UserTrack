@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Attendance } from './entities/attendance.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/entities/user.entity';
-
+import * as qrcode from 'qrcode';
 @Injectable()
 export class AttendanceService {
 
@@ -22,10 +22,20 @@ export class AttendanceService {
     const user = await this.repositoryUser.findOneBy({
       id:userId
     })
-    console.log(user)
+  
+  
+    
+const textToEncode = 'Hola, este es un código QR generado con Node.js';
+
+qrcode.toDataURL(textToEncode, (err, url) => {
+  if (err) throw err;
+
+  console.log(url); // Esto imprimirá la URL del código QR en la consola
+});
+    /*
     this.repositoryAttendance.create({
       
-    })
+    })*/
     return 'This action adds a new attendance';
   }
 
