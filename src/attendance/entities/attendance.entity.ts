@@ -1,5 +1,5 @@
 import { User } from "src/auth/entities/user.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Attendance {
@@ -8,20 +8,20 @@ export class Attendance {
 @PrimaryGeneratedColumn('uuid')
 id: string;
 
-    @OneToOne(() => User, {cascade:true})
+    @ManyToOne(() => User,(user) =>user.attendance, {cascade:true})
     @JoinColumn()
     user:User;
     
-    @Column()
+    @Column({type:'date'})
     date:Date
 
-    @Column()
+    @Column({nullable:true})
     arrivalTime:Date
 
     @Column()
     asistanceType:string
 
-    @Column()
+    @Column({nullable:true})
     endTime:Date
     /*
     @Column()

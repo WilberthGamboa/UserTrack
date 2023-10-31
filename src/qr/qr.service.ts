@@ -5,7 +5,7 @@ import { AttendanceService } from 'src/attendance/attendance.service';
 import { Attendance } from 'src/attendance/entities/attendance.entity';
 
 import { Repository } from 'typeorm';
-
+import * as qrcode from 'qrcode';
 
 @Injectable()
 export class QrService {
@@ -14,11 +14,12 @@ export class QrService {
         private readonly attendanceRepository: Repository<Attendance>, 
         private readonly attendanceService: AttendanceService
     ){}
- getQr(req:any){
-    console.log(req.user)
+ async getQr(req:any){
     const id = req.user.id;
-    this.attendanceService.create(id)
-    const today = new Date().toISOString();
+    this.attendanceService.create(id);
+
+    const qr = await qrcode.toDataURL('http://localhost:3000/'+id)
+    console.log(qr)
     
  }
 }
