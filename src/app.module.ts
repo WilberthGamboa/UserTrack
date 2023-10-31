@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { QrModule } from './qr/qr.module';
+import { AttendanceModule } from './attendance/attendance.module';
 
 @Module({
   imports: [AuthModule,QrModule, ConfigModule.forRoot(),TypeOrmModule.forRoot({
@@ -16,7 +17,7 @@ import { QrModule } from './qr/qr.module';
     password:process.env.DB_PASSWORD,
     autoLoadEntities:true,
     synchronize:true
-  }), ],
+  }), AttendanceModule, ],
   controllers: [AppController],
   providers: [AppService],
 })
