@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } fro
 import { QrService } from './qr.service';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
+import { Request } from 'express';
 
 
 @Controller('qr')
@@ -10,8 +11,9 @@ export class QrController {
 
   @Get()
   @UseGuards(AuthGuard())
-  getQr(@Req() req){
-    console.log(req.user)
+  getQr(@Req() req:Request){
+   this.qrService.getQr(req)
+  
     return'hola qr'
   }
  
