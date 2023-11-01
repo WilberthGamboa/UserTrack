@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 import { Between, Repository } from 'typeorm';
@@ -59,19 +59,27 @@ qrcode.toDataURL(textToEncode, (err, url) => {
     return 'This action adds a new attendance';
   }
 
-  findAll() {
-    return `This action returns all attendance`;
+  async setAttendance(id:string){
+    const usuario = await this.repositoryUser.findOneBy({
+      id:id
+    })
+    if (!usuario) {
+      throw new BadRequestException('El usuario no existe');
+    }
+
+    const attendanceUserToday = await this.repositoryAttendance.findOne({
+      where:{
+        user:usuario,
+        date:new Date()
+      }
+    })
+  if (attendanceUserToday.asistanceType=='FALTA') {
+    attendanceUserToday.asistanceType='ASISTENCIA'
+      await this.repositoryAttendance.update(attendanceUserToday.id,{
+        asistanceType:'PRESENTE'
+      })
+  }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} attendance`;
-  }
-
-  update(id: number, updateAttendanceDto: UpdateAttendanceDto) {
-    return `This action updates a #${id} attendance`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} attendance`;
-  }
+  
 }

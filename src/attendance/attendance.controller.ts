@@ -7,28 +7,10 @@ import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 export class AttendanceController {
   constructor(private readonly attendanceService: AttendanceService) {}
 
-  @Post()
-  create() {
-  
-  }
-
-  @Get()
-  findAll() {
-    return this.attendanceService.findAll();
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.attendanceService.findOne(+id);
+  async setAttendance(@Param('id') id: string){
+    console.log(id)
+    await this.attendanceService.setAttendance(id);
   }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAttendanceDto: UpdateAttendanceDto) {
-    return this.attendanceService.update(+id, updateAttendanceDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.attendanceService.remove(+id);
-  }
+  
 }

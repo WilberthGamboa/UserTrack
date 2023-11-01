@@ -14,12 +14,14 @@ export class QrService {
         private readonly attendanceRepository: Repository<Attendance>, 
         private readonly attendanceService: AttendanceService
     ){}
- async getQr(req:any){
+ async getQr(req:any):Promise<string>{
     const id = req.user.id;
     this.attendanceService.create(id);
-
-    const qr = await qrcode.toDataURL('http://localhost:3000/'+id)
-    console.log(qr)
+    const qr = await qrcode.toDataURL('http://localhost:3000/attendance/'+id)
+    return qr;
     
+ }
+ async validateQr(){
+
  }
 }
