@@ -6,7 +6,8 @@ import { Attendance } from './entities/attendance.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/entities/user.entity';
 import * as qrcode from 'qrcode';
-import { format } from 'date-fns';
+import { compareAsc, format, isAfter, parse } from 'date-fns';
+import { AttendanceConfiguration } from './entities/attendaceConfiguration.entity';
 @Injectable()
 export class AttendanceService {
 
@@ -14,7 +15,9 @@ export class AttendanceService {
     @InjectRepository(Attendance)
     private readonly repositoryAttendance: Repository<Attendance>,
     @InjectRepository(User)
-    private readonly repositoryUser: Repository<User>
+    private readonly repositoryUser: Repository<User>,
+    @InjectRepository(AttendanceConfiguration)
+    private readonly repositoryAttendanceConfiguration: Repository<AttendanceConfiguration>
 
   ) {
 
@@ -65,15 +68,26 @@ export class AttendanceService {
       }
     })
     // Si es falta
-    if (attendanceUserToday.asistanceType == 'FALTA') {
+    if (attendanceUserToday.asistanceType == 'FALTA' && attendanceUserToday.arrivalTime===null) {
       // Crear un objeto Date con la hora, los minutos y los segundos deseados
       const myTime = new Date();
-
-      // Formatear la hora en una cadena de tiempo
       const formattedTime = format(myTime, 'HH:mm:ss');
-      attendanceUserToday.asistanceType = 'ASISTENCIA'
+      const tiempos = await this.repositoryAttendanceConfiguration.find()
+      let tipoAttendance = 'PRESENTE'
+  
+      const time1Date = parse(tiempos[0].attendanceLimit, 'HH:mm:ss', new Date());
+      const time2Date = parse(tiempos[0].delayLimit, 'HH:mm:ss', new Date());
+
+      if (isAfter(myTime,time1Date)) {
+        tipoAttendance = 'RETARDO'
+      }
+
+      if (isAfter(myTime,time2Date)) {
+        tipoAttendance= 'FALTA'
+      }
+
       await this.repositoryAttendance.update(attendanceUserToday.id, {
-        asistanceType: 'PRESENTE',
+        asistanceType: tipoAttendance,
         arrivalTime: formattedTime
       })
       return;
