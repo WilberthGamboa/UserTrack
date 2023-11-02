@@ -16,7 +16,7 @@ export class QrService {
     ){}
  async getQr(req:any):Promise<string>{
     const id = req.user.id;
-    this.attendanceService.create(id);
+    await this.attendanceService.create(id);
     const qr = await qrcode.toDataURL('http://localhost:3000/attendance/'+id)
     return qr;
     

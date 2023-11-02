@@ -12,7 +12,8 @@ export class QrController {
   @Get()
   @UseGuards(AuthGuard())
   async getQr(@Req() req:Request){
-   return await this.qrService.getQr(req)
+    const qr = await this.qrService.getQr(req)
+   return {qr}
   }
   
   
