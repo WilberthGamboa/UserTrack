@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { QrModule } from './qr/qr.module';
 import { AttendanceModule } from './attendance/attendance.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [AuthModule,QrModule, ConfigModule.forRoot(),TypeOrmModule.forRoot({
@@ -17,7 +18,7 @@ import { AttendanceModule } from './attendance/attendance.module';
     password:process.env.DB_PASSWORD,
     autoLoadEntities:true,
     synchronize:true
-  }), AttendanceModule, ],
+  }), AttendanceModule, AdminModule, ],
   controllers: [AppController],
   providers: [AppService],
 })
