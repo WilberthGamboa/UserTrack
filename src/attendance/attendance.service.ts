@@ -6,6 +6,7 @@ import { Attendance } from './entities/attendance.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/entities/user.entity';
 import * as qrcode from 'qrcode';
+import { format } from 'date-fns';
 @Injectable()
 export class AttendanceService {
 
@@ -74,10 +75,25 @@ qrcode.toDataURL(textToEncode, (err, url) => {
       }
     })
   if (attendanceUserToday.asistanceType=='FALTA') {
+    // Crear un objeto Date con la hora, los minutos y los segundos deseados
+const myTime = new Date();
+
+// Formatear la hora en una cadena de tiempo
+const formattedTime = format(myTime, 'HH:mm:ss');
     attendanceUserToday.asistanceType='ASISTENCIA'
       await this.repositoryAttendance.update(attendanceUserToday.id,{
-        asistanceType:'PRESENTE'
+        asistanceType:'PRESENTE',
+        arrivalTime:formattedTime
       })
+  }
+
+  if (attendanceUserToday.asistanceType!='FALTA'&&attendanceUserToday.endTime==null) {
+    const myTime = new Date();
+    const formattedTime = format(myTime, 'HH:mm:ss');
+   
+    await this.repositoryAttendance.update(attendanceUserToday.id,{
+      endTime:formattedTime
+    })
   }
   }
 

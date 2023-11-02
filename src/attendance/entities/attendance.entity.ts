@@ -15,13 +15,13 @@ id: string;
     @Column({type:'date'})
     date:Date
 
-    @Column({nullable:true})
+    @Column({type:'time',nullable:true})
     arrivalTime:Date
 
     @Column()
     asistanceType:string
-
-    @Column({nullable:true})
+  
+    @Column({type:'time' ,nullable:true})
     endTime:Date
     /*
     @Column()
