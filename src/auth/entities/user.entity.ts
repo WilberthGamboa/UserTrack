@@ -18,6 +18,12 @@ export class User {
     @Column()
     password: string;
 
+    @Column('text',{
+        array:true,
+        default:['user']
+    })
+    roles:string[]
+
     @OneToMany(() => Attendance, (attendance) => attendance.user)
     attendance: Attendance[];
 }

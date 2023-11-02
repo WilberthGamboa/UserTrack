@@ -12,6 +12,6 @@ import { AuthModule } from 'src/auth/auth.module';
     TypeOrmModule.forFeature([Attendance]),
     AuthModule
   ],
-  exports:[TypeOrmModule,AttendanceService,]
+  exports:[TypeOrmModule,AttendanceService]
 })
 export class AttendanceModule {}

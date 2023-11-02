@@ -29,7 +29,7 @@ export class AttendanceService {
     // Buscamos el usuario correspondiente con la fecha de hoy
     const existAttendance = await this.repositoryAttendance.findOne({
       where: {
-        user: user,
+        user: {id:user.id},
         date: today,
       }
     })
@@ -60,7 +60,7 @@ export class AttendanceService {
     // Retornamos la attendance relacionada al día de hoy y al usuario
     const attendanceUserToday = await this.repositoryAttendance.findOne({
       where: {
-        user: usuario,
+        user: {id:usuario.id},
         date: new Date()
       }
     })
