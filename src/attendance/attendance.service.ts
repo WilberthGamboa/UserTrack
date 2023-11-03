@@ -8,6 +8,8 @@ import * as qrcode from 'qrcode';
 import { compareAsc, format, isAfter, parse } from 'date-fns';
 import { AttendanceConfiguration } from './entities/attendaceConfiguration.entity';
 import { UpdateAttendanceConfigurationDto } from './dto/update-attendance.dto';
+import { ChooseAttendaceDto } from './dto/choose-attendance.dto';
+import * as ExcelJS from 'exceljs';
 @Injectable()
 export class AttendanceService {
 
@@ -113,4 +115,76 @@ export class AttendanceService {
 
   }
 
+ async allAttendance(id:number){
+
+    const attendanceList = await this.repositoryAttendance.find({
+      skip:(id-1)*10,
+      take:10,
+      
+    })
+    
+    return attendanceList;
+  }
+
+ async myAttendance (id:number,req:any){
+  console.log(req.user)
+  const attendanceList = await this.repositoryAttendance.find({
+    skip:(id-1)*10,
+    take:10,
+    where:{
+      user:{
+        id:req.user.id
+      }
+    }
+    
+  })
+  
+  return attendanceList;
+
+ }
+
+ async excel(chooseDateDto:ChooseAttendaceDto){
+  const data = await this.repositoryAttendance.find({
+    where:{
+      date:chooseDateDto.chooseDate
+    },
+    relations:['user']
+  })
+  const test = [];
+ for (const iterator of data) {
+  test.push({
+    userName:iterator.user.name,
+    date:iterator.date,
+    arrivalTime:iterator.arrivalTime,
+    asistanceType:iterator.asistanceType,
+    endTime:iterator.endTime
+  })
+ }
+ 
+  const workbook = new ExcelJS.Workbook();
+const worksheet = workbook.addWorksheet('Hoja1');
+
+// Agrega datos a la hoja
+worksheet.columns = [
+  { header: 'userName', key: 'id' },
+  { header: 'date', key: 'date' },
+  { header: 'arrivalTime', key: 'arrivalTime' },
+  { header: 'asistanceType', key: 'asistanceType' },
+  { header: 'endTime', key: 'endTime' },
+];
+
+
+worksheet.addRows(test);
+
+// Guarda el archivo Excel en el sistema de archivos
+workbook.xlsx.writeFile('ejemplo.xlsx')
+  .then(function () {
+    console.log('Archivo Excel creado con éxito');
+  })
+  .catch(function (error) {
+    console.error('Error al crear el archivo Excel:', error);
+  });
+  const buffer = await workbook.xlsx.writeBuffer();
+return buffer;
+ }
 }
