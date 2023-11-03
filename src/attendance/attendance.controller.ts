@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, SetMetadata, UseGuards } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
-import { CreateAttendanceDto } from './dto/create-attendance.dto';
-import { UpdateAttendanceDto } from './dto/update-attendance.dto';
+
 import { AuthGuard } from '@nestjs/passport';
 import { UserRoleGuard } from 'src/auth/guards/user-role.guard';
+import { UpdateAttendanceConfigurationDto } from './dto/update-attendance.dto';
 
 @Controller('attendance')
 export class AttendanceController {
@@ -18,10 +18,11 @@ export class AttendanceController {
   @Post('/')
   @SetMetadata('roles',['admin'])
   @UseGuards(AuthGuard(),UserRoleGuard)
-  setTimes(){
-    return{
-      hola:'hola mamaguevoxd'
-    }
+  setTimes(@Body() attendanceConfigurationDto:UpdateAttendanceConfigurationDto){
+    this.attendanceService.setTimes(attendanceConfigurationDto)
   }
+
+  
+
   
 }

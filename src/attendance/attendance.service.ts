@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateAttendanceDto } from './dto/create-attendance.dto';
-import { UpdateAttendanceDto } from './dto/update-attendance.dto';
+
 import { Between, Repository } from 'typeorm';
 import { Attendance } from './entities/attendance.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,6 +7,7 @@ import { User } from 'src/auth/entities/user.entity';
 import * as qrcode from 'qrcode';
 import { compareAsc, format, isAfter, parse } from 'date-fns';
 import { AttendanceConfiguration } from './entities/attendaceConfiguration.entity';
+import { UpdateAttendanceConfigurationDto } from './dto/update-attendance.dto';
 @Injectable()
 export class AttendanceService {
 
@@ -102,6 +102,15 @@ export class AttendanceService {
       })
     }
   }
+  async setTimes(updateAttendanceConfigurationDto:UpdateAttendanceConfigurationDto){
 
+    const data =  await this.repositoryAttendanceConfiguration.find()
+    
+    await this.repositoryAttendanceConfiguration.update({id:data[0].id},{
+      attendanceLimit:updateAttendanceConfigurationDto.attendanceLimit,
+      delayLimit:updateAttendanceConfigurationDto.delayLimit
+    })
+
+  }
 
 }
