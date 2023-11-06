@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-
+import { Response } from 'express';
 import { Between, Repository } from 'typeorm';
 import { Attendance } from './entities/attendance.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,7 +9,10 @@ import { compareAsc, format, isAfter, parse } from 'date-fns';
 import { AttendanceConfiguration } from './entities/attendaceConfiguration.entity';
 import { UpdateAttendanceConfigurationDto } from './dto/update-attendance.dto';
 import { ChooseAttendaceDto } from './dto/choose-attendance.dto';
+import * as PDFDocument from 'pdfkit';
+import * as fs from 'fs';
 import * as ExcelJS from 'exceljs';
+
 @Injectable()
 export class AttendanceService {
 
@@ -177,14 +180,64 @@ worksheet.columns = [
 worksheet.addRows(test);
 
 // Guarda el archivo Excel en el sistema de archivos
-workbook.xlsx.writeFile('ejemplo.xlsx')
+/*
+await workbook.xlsx.writeFile('ejemplo.xlsx')
   .then(function () {
     console.log('Archivo Excel creado con éxito');
   })
   .catch(function (error) {
     console.error('Error al crear el archivo Excel:', error);
   });
-  const buffer = await workbook.xlsx.writeBuffer();
-return buffer;
+  */
+  //const buffer = await workbook.xlsx.writeBuffer();
+return workbook;
+ }
+
+ async pdf(chooseAttendaceDto:ChooseAttendaceDto,res:Response){
+  const data = await this.repositoryAttendance.find({
+    where:{
+      date:chooseAttendaceDto.chooseDate
+    },
+    relations:['user']
+  })
+  // Crear un nuevo documento PDF
+const doc = new PDFDocument();
+const buffers = [];
+
+// Crear un archivo PDF para escribir
+const stream = fs.createWriteStream('objeto.pdf');
+
+// Pipe el documento PDF a la corriente de escritura
+doc.pipe(stream);
+
+// Definir las propiedades del PDF
+doc.fontSize(12);
+
+// Recorrer las propiedades del objeto y agregarlas al PDF
+
+doc.text('xddxdx')
+for (const key in data) {
+  if (data.hasOwnProperty(key)) {
+    doc.text(`${key}: ${data[key].user.name} \n
+    ${key}: ${data[key].date}  \n
+    ${key}: ${data[key].asistanceType} \n
+    ${key}: ${data[key].arrivalTime}    \n
+    ${key}: ${data[key].endTime}     \n
+    `);
+  }
+}
+doc.on('data', (chunk) => {
+  buffers.push(chunk);
+});
+// Finalizar el documento PDF
+doc.on('end', () => {
+  const pdfBuffer = Buffer.concat(buffers);
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename="objeto.pdf"');
+  res.send(pdfBuffer);
+});
+
+doc.end()
  }
 }
