@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy,'jwt') {
   constructor(
     @InjectRepository(User)
     private readonly userRepository : Repository<User>,

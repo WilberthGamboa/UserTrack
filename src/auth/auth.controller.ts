@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards, Req} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginUserDto } from './dto/update-auth.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 
 @Controller('auth')
@@ -19,4 +20,17 @@ export class AuthController {
     console.log(loginUserDto)
     return this.authService.login(loginUserDto);
   }
+  @Get("/facebook")
+  @UseGuards(AuthGuard("facebook"))
+  async facebookLogin(): Promise<any> {
+  
+  }
+
+  @Get("/facebook/redirect")
+  @UseGuards(AuthGuard("facebook"))
+  async facebookLoginRedirect(@Req() req: any): Promise<any> {
+    return this.authService.loginFacebook(req.user.email)
+  }
+
+
 }

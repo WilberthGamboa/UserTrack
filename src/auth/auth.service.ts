@@ -55,6 +55,18 @@ export class AuthService {
     };
    }
 
+   async loginFacebook(email:string){
+    const user = await this.userRepository.findOne({where:{
+      email
+    }})
+    if (!user) {
+      throw new UnauthorizedException('Credential are not valid (facebook)')
+    }
+    return {
+      ...user,
+      token:this.getJwtToken({id:user.id})
+    };
+   }
   private getJwtToken(payload:JwtPayload){
 
     // 
