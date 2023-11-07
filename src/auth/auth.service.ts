@@ -42,13 +42,28 @@ export class AuthService {
   async login (loginUserDto:LoginUserDto){
     const {password,email} = loginUserDto;
     const user = await this.userRepository.findOne({
-      where:{email},
+      where:{email,password},
       select:{email:true,password:true,id:true}
     })
     if (!user) {
-      throw new UnauthorizedException('Credential are not valid (email)')
+      const userEmail = await this.userRepository.findOne({
+        where:{email},
+        select:{email:true,password:true,id:true,passwordTry:true}
+      })
+      if (userEmail) {
+      if(userEmail.passwordTry===3) throw new UnauthorizedException('Usuario bloqueados por intentos fallidos');
+      const passwordTry = userEmail.passwordTry + 1;
+      console.log(passwordTry)
+      await this.userRepository.update(userEmail.id,{
+        passwordTry
+      })
+      }
+      throw new UnauthorizedException('Credential are not valid')
     }
-    
+    // Se resetan los intentos
+    await this.userRepository.update(user.id,{
+      passwordTry:0
+    })
     return {
       ...user,
       token:this.getJwtToken({id:user.id})

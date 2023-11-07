@@ -17,12 +17,12 @@ export class AuthController {
 
   @Post('login')
   login(@Body() loginUserDto: LoginUserDto) {
-    console.log(loginUserDto)
     return this.authService.login(loginUserDto);
   }
   @Get("/facebook")
   @UseGuards(AuthGuard("facebook"))
   async facebookLogin(): Promise<any> {
+   
   
   }
 

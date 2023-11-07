@@ -22,7 +22,11 @@ export class User {
         array:true,
         default:['user']
     })
-    roles:string[]
+    roles:string[];
+    @Column('int',{
+        default:0
+    })
+    passwordTry:number;
 
     @OneToMany(() => Attendance, (attendance) => attendance.user)
     attendance: Attendance[];

@@ -33,7 +33,8 @@ export class FacebookStrategy extends PassportStrategy(Strategy,'facebook') {
     profile: Profile,
     done: (err: any, user: any, info?: any) => void
   ): Promise<any> {
-  const {_json} = profile;
+  try {
+    const {_json} = profile;
   const user = await this.userRepository.findOneBy({
     email:_json.email
   })
@@ -48,6 +49,10 @@ export class FacebookStrategy extends PassportStrategy(Strategy,'facebook') {
   
   return {
     user: await  this.userRepository.save(newUser)
+  }
+  } catch (error) {
+    console.log('xd')
+    console.log(error.message)
   }
    
   }
