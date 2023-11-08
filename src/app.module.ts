@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { QrModule } from './qr/qr.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { AdminModule } from './admin/admin.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [AuthModule,QrModule, ConfigModule.forRoot(),TypeOrmModule.forRoot({
@@ -18,7 +19,7 @@ import { AdminModule } from './admin/admin.module';
     password:process.env.DB_PASSWORD,
     autoLoadEntities:true,
     synchronize:true
-  }), AttendanceModule, AdminModule, ],
+  }), AttendanceModule, AdminModule, MailModule, ],
   controllers: [AppController],
   providers: [AppService],
 })

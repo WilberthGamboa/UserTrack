@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, SetMetadata, UseGuards, BadRequestException, Req, Res,StreamableFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, SetMetadata, UseGuards, BadRequestException, Req, Res,StreamableFile, Query } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 
 import { AuthGuard } from '@nestjs/passport';
@@ -7,6 +7,7 @@ import { UpdateAttendanceConfigurationDto } from './dto/update-attendance.dto';
 import { ChooseAttendaceDto } from './dto/choose-attendance.dto';
 import { Response } from 'express';
 import { createReadStream } from 'fs';
+import { ResetPasswordDto } from './dto/resetpassword-attendance.dto';
 
 @Controller('attendance')
 export class AttendanceController {
@@ -25,12 +26,6 @@ export class AttendanceController {
   async pdf(@Body() chooseDateDto:ChooseAttendaceDto,@Res() res: Response){
 await this.attendanceService.pdf(chooseDateDto,res) 
 
-   
-  
-
-   
-
-  
   }
   @Get('excel')
   @SetMetadata('roles',['admin'])
@@ -74,6 +69,11 @@ await this.attendanceService.pdf(chooseDateDto,res)
   async setAttendance(@Param('id') id: string){
     console.log(id)
     await this.attendanceService.setAttendance(id);
+  }
+
+  @Get('resetpassword')
+  async resetPasswordJwt(@Body() ressetPasswordDto:ResetPasswordDto ){
+
   }
 
   
