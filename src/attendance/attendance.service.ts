@@ -12,7 +12,7 @@ import { ChooseAttendaceDto } from './dto/choose-attendance.dto';
 import * as PDFDocument from 'pdfkit';
 import * as fs from 'fs';
 import * as ExcelJS from 'exceljs';
-import { ResetPasswordDto } from './dto/resetpassword-attendance.dto';
+import { ResetPasswordDto } from '../auth/entities/resetpassword-auth.dto';
 
 @Injectable()
 export class AttendanceService {
@@ -242,16 +242,5 @@ doc.on('end', () => {
 doc.end()
  }
 
- async resetPassword(resetPasswordDto: ResetPasswordDto){
-    const user = await this.repositoryUser.findOne({
-      where:{
-        id:resetPasswordDto.id
-      }
-    })
-    if(!user) throw new BadRequestException('El id no existe');
-    await this.repositoryUser.update(user.id,{
-      password:resetPasswordDto.newpassword
-      
-    })
- }
+ 
 }

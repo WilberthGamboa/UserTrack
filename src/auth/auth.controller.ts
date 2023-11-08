@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards, Req} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards, Req, Put} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginUserDto } from './dto/update-auth.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ResetPasswordDto } from './entities/resetpassword-auth.dto';
 
 
 @Controller('auth')
@@ -31,6 +32,9 @@ export class AuthController {
   async facebookLoginRedirect(@Req() req: any): Promise<any> {
     return this.authService.loginFacebook(req.user.email)
   }
-
+  @Put('resetpassword')
+  async resetPasswordJwt(@Body() ressetPasswordDto:ResetPasswordDto ){
+return this.authService.resetPassword(ressetPasswordDto)
+  }
 
 }

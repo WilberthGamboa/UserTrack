@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginUserDto } from './dto/update-auth.dto';
 import { Repository } from 'typeorm';
@@ -6,10 +6,11 @@ import { User } from './entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ResetPasswordDto } from './entities/resetpassword-auth.dto';
 
 @Injectable()
 export class AuthService {
-
+ 
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -89,4 +90,21 @@ export class AuthService {
     return token;
     
   }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto){
+    const user = await this.userRepository.findOne({
+      where:{
+        id:resetPasswordDto.id
+      }
+    })
+    if(!user) throw new BadRequestException('El id no existe');
+    await this.userRepository.update(user.id,{
+      password:resetPasswordDto.newpassword,
+      passwordTry:0
+      
+    })
+    return {
+      msg: 'Password cambiada con exito'
+    }
+ }
 }
