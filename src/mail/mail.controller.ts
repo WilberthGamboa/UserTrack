@@ -4,7 +4,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserRoleGuard } from 'src/auth/guards/user-role.guard';
 import { Request } from 'express';
 import { MailDto } from './dto/mail.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Email')
 @Controller('mail')
 export class MailController {
   constructor(private readonly mailService: MailService) {}

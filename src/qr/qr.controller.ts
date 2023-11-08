@@ -3,8 +3,9 @@ import { QrService } from './qr.service';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 import { Request } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Qr')
 @Controller('qr')
 export class QrController {
   constructor(private readonly qrService: QrService) {}

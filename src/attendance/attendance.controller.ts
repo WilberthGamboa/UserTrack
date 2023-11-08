@@ -8,7 +8,8 @@ import { ChooseAttendaceDto } from './dto/choose-attendance.dto';
 import { Response } from 'express';
 import { createReadStream } from 'fs';
 import { ResetPasswordDto } from '../auth/entities/resetpassword-auth.dto';
-
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+@ApiTags('Attendance')
 @Controller('attendance')
 export class AttendanceController {
   constructor(private readonly attendanceService: AttendanceService) {}
@@ -17,6 +18,8 @@ export class AttendanceController {
   @Post('')
   @SetMetadata('roles',['admin'])
   @UseGuards(AuthGuard(),UserRoleGuard)
+  @ApiResponse({status:200,description:'Se setearon los times'})
+  @ApiResponse({status:400,description:'Dato incorrecto'})
   setTimes(@Body() attendanceConfigurationDto:UpdateAttendanceConfigurationDto){
     this.attendanceService.setTimes(attendanceConfigurationDto)
   }
