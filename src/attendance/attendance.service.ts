@@ -13,6 +13,7 @@ import * as PDFDocument from 'pdfkit';
 import * as fs from 'fs';
 import * as ExcelJS from 'exceljs';
 import { ResetPasswordDto } from '../auth/entities/resetpassword-auth.dto';
+import { AddCommentDto } from './dto/addComments-attendance.dto';
 
 @Injectable()
 export class AttendanceService {
@@ -241,6 +242,21 @@ doc.on('end', () => {
 
 doc.end()
  }
+
+
+async addComment(addCommentDto:AddCommentDto){
+    const attendance = await this.repositoryAttendance.findOne({
+      where:{
+        id:addCommentDto.idAttendance
+      }
+    })
+    if (!attendance) throw new BadRequestException('Attendance no encontrado')
+
+    this.repositoryAttendance.update({id:attendance.id},{
+      comments:addCommentDto.comment
+    })
+    return attendance;
+}
 
  
 }

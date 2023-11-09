@@ -23,8 +23,8 @@ id: string;
   
     @Column({type:'time' ,nullable:true})
     endTime:Date
-    /*
+    
     @Column()
-    comments:string[]
-*/
+    comments:string
+
 }

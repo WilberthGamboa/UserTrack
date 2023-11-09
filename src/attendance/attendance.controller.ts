@@ -9,6 +9,7 @@ import { Response } from 'express';
 import { createReadStream } from 'fs';
 import { ResetPasswordDto } from '../auth/entities/resetpassword-auth.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AddCommentDto } from './dto/addComments-attendance.dto';
 @ApiTags('Attendance')
 @Controller('attendance')
 export class AttendanceController {
@@ -27,7 +28,7 @@ export class AttendanceController {
   @SetMetadata('roles',['admin'])
   @UseGuards(AuthGuard(),UserRoleGuard)
   async pdf(@Body() chooseDateDto:ChooseAttendaceDto,@Res() res: Response){
-await this.attendanceService.pdf(chooseDateDto,res) 
+  await this.attendanceService.pdf(chooseDateDto,res) 
 
   }
   @Get('excel')
@@ -66,7 +67,7 @@ await this.attendanceService.pdf(chooseDateDto,res)
     }
    return  await this.attendanceService.myAttendance(id,req)
   }
-  
+
 
   @Get('setAttendance/:id')
   async setAttendance(@Param('id') id: string){
@@ -74,7 +75,10 @@ await this.attendanceService.pdf(chooseDateDto,res)
     await this.attendanceService.setAttendance(id);
   }
 
-  
+  @Put('addComment')
+  async addComment (@Body() addCommentDto:AddCommentDto){
+    return await this.attendanceService.addComment(addCommentDto)
+  }
 
   
 }
