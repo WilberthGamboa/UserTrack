@@ -44,7 +44,7 @@ export class AuthService {
     const {password,email} = loginUserDto;
     const user = await this.userRepository.findOne({
       where:{email,password},
-      select:{email:true,password:true,id:true}
+      select:{email:true,password:true,id:true,passwordTry:true}
     })
     if (!user) {
       const userEmail = await this.userRepository.findOne({
@@ -61,6 +61,7 @@ export class AuthService {
       }
       throw new UnauthorizedException('Credential are not valid')
     }
+    if(user.passwordTry===3)  throw new UnauthorizedException('Usuario bloqueados por intentos fallidos');
     // Se resetan los intentos
     await this.userRepository.update(user.id,{
       passwordTry:0
