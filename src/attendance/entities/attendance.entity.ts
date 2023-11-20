@@ -24,7 +24,7 @@ id: string;
     @Column({type:'time' ,nullable:true})
     endTime:Date
     
-    @Column()
+    @Column({nullable:true})
     comments:string
 
 }
