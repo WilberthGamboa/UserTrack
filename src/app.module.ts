@@ -8,6 +8,7 @@ import { QrModule } from './qr/qr.module';
 import { AttendanceModule } from './attendance/attendance.module';
 
 import { MailModule } from './mail/mail.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [AuthModule,QrModule, ConfigModule.forRoot(),TypeOrmModule.forRoot({
@@ -19,7 +20,7 @@ import { MailModule } from './mail/mail.module';
     password:process.env.DB_PASSWORD,
     autoLoadEntities:true,
     synchronize:true
-  }), AttendanceModule, MailModule, ],
+  }), AttendanceModule, MailModule, SeedModule, ],
   controllers: [AppController],
   providers: [AppService],
 })
